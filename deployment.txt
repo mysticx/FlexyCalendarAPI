@@ -1,0 +1,10 @@
+# Install mysqlclient in order to connect to DB
+pip install mysqlclient
+
+# Django Rest Framework
+pip install djangorestframework
+pip install markdown       # Markdown support for the browsable API.
+pip install django-filter  # Filtering support
+
+# Django Rest Cors Headers
+pip install django-cors-headers
