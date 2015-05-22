@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'JsonAPI'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -74,8 +75,8 @@ DATABASES = SecurityConfigurations.DATABASES
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-CORS_ORIGIN_ALLOW_ALL = False
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = SecurityConfigurations.CORS_ORIGIN_WHITELIST
 
 LANGUAGE_CODE = 'en-us'

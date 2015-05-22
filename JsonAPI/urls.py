@@ -8,6 +8,7 @@ router.register(r'api/users', views.UserViewSet)
 
 urlpatterns = patterns('',    
     url(r'^', include(router.urls)),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),    
+    url(r'^api/login', views.login),    
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^admin/', include(admin.site.urls)),    
 )

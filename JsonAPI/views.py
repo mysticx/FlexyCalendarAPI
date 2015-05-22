@@ -3,6 +3,27 @@ from JsonAPI import serializers
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 import json
+from django.http.response import JsonResponse
+from django.contrib import auth
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def login(request):
+    '''
+        Logs the user in with the API infrastructure 
+    '''
+    if request.method != 'POST':
+        return JsonResponse({'error':'Wrong method used!'})
+    else:                    
+        data = json.loads(request.body.decode('utf-8'))    
+
+        user = auth.authenticate(username=data['username'], password=data['password'])
+        if user is not None and user.is_active:
+            auth.login(request, user)
+                                    
+            return JsonResponse({'success':'Authentication passed!'})
+        else:
+            return JsonResponse({'error':'Wrong username or password!'})
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -15,11 +36,11 @@ class UserViewSet(viewsets.ModelViewSet):
                 user_serializer.object.set_password(user_serializer.data['password'])
                 user_serializer.object.save()
             except Exception as e:
-                return Response({'Error':'Error saving user data! '})
+                return Response({'error':'error saving user data! '})
              
-            return Response({'Success':'User {0} is registered successfully.'.format(user_serializer.data['username'])})
+            return Response({'success':'User {0} is registered successfully.'.format(user_serializer.data['username'])})
         else:
-            return Response({'Error':'Error registering user, incorrect data! ', 'data': json.dumps(user_serializer.errors)})
+            return Response({'error':'error registering user, incorrect data! ', 'data': json.dumps(user_serializer.errors)})
       
     def update(self, request, *args, **kwargs):
         ''' 
@@ -38,9 +59,9 @@ class UserViewSet(viewsets.ModelViewSet):
             try:                
                 user_serializer.save()
             except Exception as e:
-                return Response({'Error': 'Error updating user, incorrect data!'})
+                return Response({'error': 'error updating user, incorrect data!'})
                       
             return Response({'user:': user_serializer.data,  'status':'User {0} was updated successfully.'.format(user_serializer.data['username'])})
         else:
-            return Response({'Error': 'Error updating user, incorrect data!'})
+            return Response({'error': 'error updating user, incorrect data!'})
        
