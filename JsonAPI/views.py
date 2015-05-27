@@ -3,7 +3,7 @@ from JsonAPI import serializers
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 import json
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponse
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 
@@ -24,6 +24,16 @@ def login(request):
             return JsonResponse({'success':'Authentication passed!'})
         else:
             return JsonResponse({'error':'Wrong username or password!'})
+
+def is_logged(request):
+    if request.user.is_authenticated():
+        res = HttpResponse("")
+        res.status_code = 200
+        return res
+    else:
+        res = HttpResponse("Unauthorized")
+        res.status_code = 401
+        return res
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
