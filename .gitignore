@@ -43,3 +43,4 @@ Temporary Items
 .apdisk
 FlexyCalendarAPI/security_settings.py
 FlexyCalendarAPI_LOCAL/security_settings.py
+FlexyCalendarAPI_DEPLOY/security_settings.py

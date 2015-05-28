@@ -6,6 +6,8 @@ import json
 from django.http.response import JsonResponse, HttpResponse
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from JsonAPI import models
+from rest_framework.authentication import SessionAuthentication
 
 @csrf_exempt
 def login(request):
@@ -40,13 +42,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
 
     def create(self, request, *args, **kwargs):
-        user_serializer = serializers.UserSerializer(data=request.DATA, context={'request': request})
+        user_serializer = self.serializer_class(data=request.DATA, context={'request': request})
         if user_serializer.is_valid():
             try:
                 user_serializer.object.set_password(user_serializer.data['password'])
                 user_serializer.object.save()
             except Exception as e:
-                return Response({'error':'error saving user data! '})
+                return Response({'error':'error saving user data!'})
              
             return Response({'success':'User {0} is registered successfully.'.format(user_serializer.data['username'])})
         else:
@@ -61,7 +63,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # permission_classes = (IsAdminUser,)
         old_user = User.objects.get(id=kwargs['pk'])
         old_password = old_user.password # this field is later being updated and replaced by the serializer
-        user_serializer = serializers.UserSerializer(instance=old_user, data=request.DATA, context = {'request': request})
+        user_serializer = self.serializer_class(instance=old_user, data=request.DATA, context = {'request': request})
         
         if user_serializer.is_valid():                                                    
             if old_password != user_serializer.data['password']:
@@ -74,4 +76,19 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'user:': user_serializer.data,  'status':'User {0} was updated successfully.'.format(user_serializer.data['username'])})
         else:
             return Response({'error': 'error updating user, incorrect data!'})
+       
+class EventPeriodType(viewsets.ModelViewSet):
+    authentication_classes = (SessionAuthentication,)
+    queryset =  models.EventPeriodType.objects.all()
+    serializer_class = serializers.EventPeriodTypeSerializer
+    
+#     def update(self, request, *args, **kwargs):
+#         res = HttpResponse("Unauthorized")
+#         res.status_code = 401
+#         return res
+#     
+#     def create(self, request, *args, **kwargs):
+#         res = HttpResponse("Unauthorized")
+#         res.status_code = 401
+#         return res    
        
