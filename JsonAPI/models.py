@@ -5,7 +5,7 @@ class EventPeriodType(models.Model):
     name = models.CharField(max_length=100, blank=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'event_period_type'
 
 class CalendarEvent(models.Model):
@@ -18,5 +18,5 @@ class CalendarEvent(models.Model):
     date = models.DateTimeField()
     
     class Meta:
-        managed = False
+        managed = True
         db_table = 'calendar_event'        

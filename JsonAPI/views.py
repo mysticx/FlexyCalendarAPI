@@ -48,7 +48,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user_serializer.object.set_password(user_serializer.data['password'])
                 user_serializer.object.save()
             except Exception as e:
-                return Response({'error':'error saving user data!'})
+                return Response({'error':'error saving user data! {0}'.format(str(e))})
              
             return Response({'success':'User {0} is registered successfully.'.format(user_serializer.data['username'])})
         else:
